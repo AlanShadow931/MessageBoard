@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>電子留言板</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0ea5e9"/>
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <h1>電子留言板</h1>
+    <div class="spacer"></div>
+    <button id="themeToggle" class="secondary">切換主題</button>
+    <button id="notifyBtn" class="secondary">通知(<span id="notifyCount">0</span>)</button>
+    <div id="authArea">
+      <button id="loginBtn">登入</button>
+      <button id="registerBtn" class="secondary">註冊</button>
+    </div>
+    <div id="userArea" class="hidden">
+      <span id="userDisplay"></span>
+      <button id="settingsBtn" class="secondary">帳號設定</button>
+      <button id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <input id="searchInput" placeholder="搜尋留言關鍵字..." />
+      <select id="tagFilter">
+        <option value="">全部標籤</option>
+      </select>
+      <button id="refreshBtn" class="secondary">重新整理</button>
+    </section>
+
+    <section id="composer" class="card">
+      <h3>發表留言</h3>
+      <textarea id="messageInput" rows="4" placeholder="說點什麼..."></textarea>
+      <div class="row">
+        <input type="file" id="imageFile" accept="image/*"/>
+        <button id="emojiBtn" class="secondary">😀 表情</button>
+        <div id="emojiPicker" class="emoji-picker hidden"></div>
+        <div class="spacer"></div>
+        <button id="postBtn">送出</button>
+      </div>
+    </section>
+
+    <section id="tagPanel" class="card">
+      <h3>標籤</h3>
+      <div class="row">
+        <input id="newTagInput" placeholder="新增標籤（版主以上）"/>
+        <button id="addTagBtn" class="secondary">新增</button>
+      </div>
+      <div id="tagList" class="tag-list"></div>
+    </section>
+
+    <section class="card">
+      <h3>留言列表</h3>
+      <div id="messageList"></div>
+    </section>
+  </main>
+
+  <!-- Login Modal -->
+  <dialog id="loginDialog">
+    <form method="dialog" class="dialog">
+      <h3>登入</h3>
+      <input id="loginUsername" placeholder="帳號"/>
+      <input id="loginPassword" placeholder="密碼" type="password"/>
+      <div class="row">
+        <button id="doLogin">登入</button>
+        <button id="toRegister" class="secondary" value="cancel">沒有帳號？註冊</button>
+        <button value="cancel" class="secondary">關閉</button>
+      </div>
+      <p class="hint">尚未擁有帳號？請點「註冊」。</p>
+    </form>
+  </dialog>
+
+  <!-- Register Modal -->
+  <dialog id="registerDialog">
+    <form method="dialog" class="dialog">
+      <h3>註冊</h3>
+      <input id="regUsername" placeholder="帳號"/>
+      <input id="regDisplay" placeholder="顯示名稱（可留空）"/>
+      <input id="regPassword" placeholder="密碼" type="password"/>
+      <div class="row">
+        <button id="doRegister">建立帳號</button>
+        <button value="cancel" class="secondary">關閉</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings Modal -->
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog">
+      <h3>帳號設定</h3>
+      <input id="setDisplay" placeholder="顯示名稱"/>
+      <input id="setPassword" placeholder="新密碼（可留空）" type="password"/>
+      <select id="setTheme">
+        <option value="light">淺色</option>
+        <option value="dark">深色</option>
+      </select>
+      <div class="row">
+        <button id="saveSettings">儲存</button>
+        <button value="cancel" class="secondary">關閉</button>
+      </div>
+      <div id="roleAdmin" class="hidden">
+        <h4>管理員工具</h4>
+        <input id="roleUserId" placeholder="使用者ID"/>
+        <select id="roleSelect">
+          <option value="user">user</option>
+          <option value="moderator">moderator</option>
+          <option value="admin">admin</option>
+        </select>
+        <button id="applyRole" class="secondary">套用角色</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Notifications Modal -->
+  <dialog id="notifyDialog">
+    <form method="dialog" class="dialog">
+      <h3>通知</h3>
+      <div id="notifyList"></div>
+      <div class="row">
+        <button id="markRead">全部標為已讀</button>
+        <button value="cancel" class="secondary">關閉</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+</body>
+</html>
